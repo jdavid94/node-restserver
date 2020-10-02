@@ -2,11 +2,12 @@ const express = require('express');
 const bcrypt = require('bcrypt'); //Encriptacion
 const _ = require('underscore'); // Funcionalidades
 const User = require('../models/user');
+const { verificatedToken, verificatedRole } = require('../config/middlewares/authentication');
 const app = express();
 
 
 //Get All the users
-app.get('/user', function(req, res) {
+app.get('/user', verificatedToken, function(req, res) {
     let from = req.query.from || 0; //Parametro Desde Paginacion, si no recibe nada empieza en 0
     let limite = req.query.limite || 5; //Parametro Hasta Paginacion
     limite = Number(limite);
@@ -34,7 +35,7 @@ app.get('/user', function(req, res) {
 })
 
 //Create
-app.post('/user', function(req, res) {
+app.post('/user', [verificatedToken, verificatedRole], function(req, res) {
     let body = req.body;
     let user = new User({
         name: body.name,
@@ -58,7 +59,7 @@ app.post('/user', function(req, res) {
 })
 
 //Update
-app.put('/user/:id', function(req, res) {
+app.put('/user/:id', [verificatedToken, verificatedRole], function(req, res) {
     let id = req.params.id;
     //Filtramos que se puede actualiazar del modelo.
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'state']); //Estos parametros se pueden actualizar
@@ -80,7 +81,7 @@ app.put('/user/:id', function(req, res) {
 })
 
 //Delete USERS
-app.delete('/user/:id', function(req, res) {
+app.delete('/user/:id', [verificatedToken, verificatedRole], function(req, res) {
     let id = req.params.id; //GET THE ID BY URL
     //let body = _.pick(req.body);
     //body.state = false;
