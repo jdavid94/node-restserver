@@ -12,7 +12,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 // ===========================
 // Expired Date 60 S - 60 M - 24h - 30days
 // ===========================
-process.env.CADUCATED_TOKEN = 60 * 60 * 24 * 30;
+process.env.CADUCATED_TOKEN = '48h';
 
 // ===========================
 // SEED For authentication
