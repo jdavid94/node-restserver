@@ -37,7 +37,27 @@ let verificatedRole = (req, res, next) => {
     }
 }
 
+// ================
+//  TOKEN VERIFICATION IMG
+// ================
+let verificatedTokenImg = (req, res, next) => {
+    let token = req.query.token;
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'Invalid Token'
+                }
+            });
+        }
+        req.user = decoded.user; // Obtener el payload del user
+        next(); // Permitimos continuar
+    });;
+}
+
 module.exports = {
     verificatedToken,
-    verificatedRole
+    verificatedRole,
+    verificatedTokenImg
 }
